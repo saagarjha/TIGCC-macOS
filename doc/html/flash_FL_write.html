@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<TITLE>FL_write</TITLE>
+<LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="style.css">
+</HEAD>
+<BODY BGCOLOR="#FFFFF8">
+<TABLE CLASS="INVTABLE" WIDTH="100%">
+<TR>
+<TD CLASS="NOBORDER" WIDTH="40"><IMG SRC="function.gif" WIDTH="32" HEIGHT="32" BORDER="0"></TD>
+<TD CLASS="TITLE">FL_write</TD>
+<TD CLASS="DESCRIPTION">Function (ROM Call 0x171)</TD>
+</TR>
+</TABLE>
+<HR>
+<TABLE CLASS="NOBORDER" WIDTH="100%"><TR>
+<TD CLASS="HEADER" ALIGN="RIGHT"><A HREF="flash.html">flash.h</A>
+</TD>
+</TR></TABLE>
+<P><TABLE CLASS="DEFTABLE"><TR><TD CLASS="DEFINITION"><B><A HREF="keywords_void.html">void</A></B> FL_write (<B><A HREF="keywords_const.html">const</A></B> <B><A HREF="keywords_void.html">void</A></B> *src, <B><A HREF="keywords_void.html">void</A></B> *dest, <B><A HREF="keywords_short.html">unsigned</A></B> <B><A HREF="keywords_short.html">long</A></B> size);</TD></TR></TABLE>
+<P CLASS="ITEMDESC"><B>Writes a block into the Flash ROM.</B>
+<P>FL_write writes a <I>size</I> bytes long block which begins at address pointed to by <I>src</I>
+into the Flash ROM at the address <I>dest</I>. Writting is allowed only to the user portion
+of the Flash ROM (also known as "archive memory"), which on HW1 calculators starts at 0x390000
+(TI-89) or 0x590000 (TI-92 Plus)
+and on HW2 calculators starts just at the end of the ROM code. User portion of the Flash ROM
+ends on 0x400000 (TI-89) or 0x600000 (TI-92 Plus). Any attempt to write something out of this
+region will be ignored.
+<P><HR>Used by: <A HREF="flash_EM_write.html">EM_write</A>
+</BODY>
+</HTML>

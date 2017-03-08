@@ -1,0 +1,81 @@
+#!/bin/bash
+#
+# TIGCC XCode Build System
+# Written by Adam Thayer <krevnik@comcast.net>
+# 
+# Feel free to modify this file or use it in other projects,
+# as long as credit is given where credit is due.
+# This file is specific to the MacOS X release of TIGCC.
+
+# Needed Definitions
+export TIGCC="/usr/local/tigcc"
+export PATH="${PATH}:${TIGCC}/bin"
+
+# Source Builder
+function build_src {
+	OLD_DIR="$(pwd)"
+	>&2 echo $1
+	cd "$1"
+	CUR_DIR="$(pwd)"
+	
+	# Don't check the build directory
+	if [ "$(pwd)" == "${OBJROOT}" ] || [[ "$(pwd)" == *".xcode"* ]]; then
+		cd "${OLD_DIR}"
+		return 0
+	fi
+	
+	LOCAL_DIR_C="$(ls *.c 2>> /dev/null)"
+	LOCAL_DIR_S="$(ls *.s *.asm 2>> /dev/null)"
+	SUB_DIRS="$(ls -d */ 2>> /dev/null)"
+
+	for cfile in ${LOCAL_DIR_C}; do
+		/usr/local/tigcc/bin/gcc -c -S -o "${OBJROOT}/tigccasm/${cfile}.s" \
+			${OPTIMIZATION_CFLAGS} -I/usr/local/tigcc/include/c \
+			"${CUR_DIR}/${cfile}"
+		/usr/local/tigcc/bin/as -o "${OBJROOT}/tigcclink/${cfile}.o" \
+			"${OBJROOT}/tigccasm/${cfile}.s"
+	done
+		
+	for sfile in ${LOCAL_DIR_S}; do
+		/usr/local/tigcc/bin/as -o "${OBJROOT}/tigcclink/${sfile}.o" \
+			${CUR_DIR}/${sfile}
+	done           
+	
+	for dir in ${SUB_DIRS}; do
+		build_src "${dir}"
+	done
+	 
+	cd "${OLD_DIR}"
+	
+}
+
+# Object Linker
+function link_project {
+	#LD_FILES="$(ls ${OBJROOT}/tigcclink/*.o 2>> /dev/null)"
+
+	find "${OBJROOT}/tigcclink" -name "*.o" -print0 | xargs -0 /usr/local/tigcc/bin/ld-tigcc -o "${PRODUCT_NAME}" \
+		/usr/local/tigcc/lib/tigcc.a
+}
+
+# First, check the directories that we need
+if [ ! -e "${OBJROOT}/tigcclink/" ]; then
+	echo Creating linker directory...
+	mkdir "${OBJROOT}/tigcclink/"
+fi
+
+if [ ! -e "${OBJROOT}/tigccasm/" ]; then
+	echo Creating assembler directory...
+	mkdir "${OBJROOT}/tigccasm/"
+fi
+
+# Build and Link the Project
+build_src "${SRCROOT}"
+link_project
+
+# Finish the build
+if [ $? != 0 ]; then
+	echo Project build failed...
+	exit 1
+fi
+echo Project build succeeded...
+exit 0

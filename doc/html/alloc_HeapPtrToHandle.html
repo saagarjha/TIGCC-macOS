@@ -1,0 +1,29 @@
+<HTML>
+<HEAD>
+<TITLE>HeapPtrToHandle</TITLE>
+<LINK REL="STYLESHEET" TYPE="TEXT/CSS" HREF="style.css">
+</HEAD>
+<BODY BGCOLOR="#FFFFF8">
+<TABLE CLASS="INVTABLE" WIDTH="100%">
+<TR>
+<TD CLASS="NOBORDER" WIDTH="40"><IMG SRC="function.gif" WIDTH="32" HEIGHT="32" BORDER="0"></TD>
+<TD CLASS="TITLE">HeapPtrToHandle</TD>
+<TD CLASS="DESCRIPTION">Function (ROM Call 0x23A)</TD>
+</TR>
+</TABLE>
+<HR>
+<TABLE CLASS="NOBORDER" WIDTH="100%"><TR>
+<TD CLASS="HEADER" ALIGN="RIGHT"><A HREF="alloc.html">alloc.h</A>
+</TD>
+</TR></TABLE>
+<P><TABLE CLASS="DEFTABLE"><TR><TD CLASS="DEFINITION"><A HREF="alloc_HANDLE.html">HANDLE</A> HeapPtrToHandle (<B><A HREF="keywords_void.html">void</A></B> *Ptr);</TD></TR></TABLE>
+<P CLASS="ITEMDESC"><B>Determines the handle associated with a block.</B>
+<P>HeapPtrToHandle returns the handle which is associated with a block that is
+pointed to by <I>Ptr</I> (or <A HREF="alloc_H_NULL.html">H_NULL</A> if there is not a handle
+that references the given block).
+This routine works by searching the entire table of handles for the given pointer,
+and so should be used accordingly. It assumes that the heap has not been compressed
+since the dereferenced pointer was
+originally obtained or the block it points to is locked.
+</BODY>
+</HTML>
